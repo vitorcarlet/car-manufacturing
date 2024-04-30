@@ -42,6 +42,8 @@ public class UserCredentials implements UserDetails {
         this.role = role;
     }
 
+    //testcommit
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.role == RoleEnum.ADMIN) {
