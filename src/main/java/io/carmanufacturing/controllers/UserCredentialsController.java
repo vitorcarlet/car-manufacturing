@@ -1,7 +1,8 @@
 package io.carmanufacturing.controllers;
 
+import io.carmanufacturing.dtos.UserDto;
 import io.carmanufacturing.rest.UserCredentialsRest;
-import io.carmanufacturing.services.UsuarioService;
+import io.carmanufacturing.services.UserService;
 import io.carmanufacturing.dtos.UserCredentialsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserCredentialsController implements UserCredentialsRest {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private UserService userService;
 
     @Override
-    public UserCredentialsDto salvar(@RequestBody UserCredentialsDto userCredentialsDto) {
-        return  usuarioService.salvar(userCredentialsDto) ;
+    public UserCredentialsDto salvar(@RequestBody UserCredentialsDto userCredentialsDto, UserDto userDto) {
+        return  userService.salvar(userCredentialsDto,userDto) ;
     }
 
     @Override

@@ -1,5 +1,6 @@
-package io.carmanufacturing.repository;
+package io.carmanufacturing.respositories;
 
+import io.carmanufacturing.entities.User;
 import io.carmanufacturing.persistence.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
