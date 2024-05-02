@@ -2,8 +2,8 @@ package io.carmanufacturing.servicesImpl;
 
 import io.carmanufacturing.dtos.UserCredentialsDto;
 import io.carmanufacturing.dtos.UserDto;
-import io.carmanufacturing.entities.UserCredentials;
 import io.carmanufacturing.A1Infrastructure.exceptions.BusinessException;
+import io.carmanufacturing.persistence.UserCredentialsPersistence;
 import io.carmanufacturing.persistence.UserEntity;
 import io.carmanufacturing.respositories.UserCredentialsRepository;
 import io.carmanufacturing.respositories.UserRepository;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserCredentialsDto salvar(UserCredentialsDto userCredentialsDto, UserDto userDto) {
-        UserCredentials userCredentialsJaExiste = userCredentialsRepository.findByLogin(userCredentialsDto.login());
+        UserCredentialsPersistence userCredentialsJaExiste = userCredentialsRepository.findByLogin(userCredentialsDto.login());
         UserEntity userCpfAlreadyExists = userRepository.findByCpf(userDto.cpf());
 
         if (userCredentialsJaExiste != null || userCpfAlreadyExists != null) {
@@ -35,9 +35,9 @@ public class UserServiceImpl implements UserService {
 
         var passwordHash = passwordEncoder.encode(userCredentialsDto.senha());
 
-        UserCredentials entity = new UserCredentials(userCredentialsDto.nome(), userCredentialsDto.login(), passwordHash, userCredentialsDto.role());
+        UserCredentialsPersistence entity = new UserCredentialsPersistence(userCredentialsDto.nome(), userCredentialsDto.login(), passwordHash, userCredentialsDto.role());
 
-        UserCredentials novoUserCredentials = userCredentialsRepository.save(entity);
+        UserCredentialsPersistence novoUserCredentials = userCredentialsRepository.save(entity);
 
         return new UserCredentialsDto(novoUserCredentials.getNome(), novoUserCredentials.getLogin(), novoUserCredentials.getSenha(), novoUserCredentials.getRole());
     }

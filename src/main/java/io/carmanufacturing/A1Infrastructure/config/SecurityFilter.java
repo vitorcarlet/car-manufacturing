@@ -1,8 +1,8 @@
 package io.carmanufacturing.A1Infrastructure.config;
 
-import io.carmanufacturing.entities.UserCredentials;
 import io.carmanufacturing.A1Infrastructure.exceptions.UnauthorizedException;
-import io.carmanufacturing.respositories.UsuarioRepository;
+import io.carmanufacturing.persistence.UserCredentialsPersistence;
+import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,7 +23,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     private AuthService authService;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -33,7 +33,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (token != null) {
             String login = authService.validaTokenJwt(token);
-            UserCredentials userCredentials = usuarioRepository.findByLogin(login);
+            UserCredentialsPersistence userCredentials = userRepository.findByLogin(login);
 
             if (userCredentials == null) {
                 throw  new UnauthorizedException("Unauthorizad");

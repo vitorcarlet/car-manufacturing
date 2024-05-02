@@ -1,7 +1,7 @@
 package io.carmanufacturing.dtos;
 
-import io.carmanufacturing.entities.UserCredentials;
 import io.carmanufacturing.entities.UserPermissions;
+import io.carmanufacturing.persistence.UserCredentialsPersistence;
 
 import java.util.Date;
 
@@ -11,6 +11,6 @@ public record UserDto (
         Date birth,
         String gender,
         boolean activeUser,
-        UserCredentials userCredentials,
+        UserCredentialsPersistence userCredentials,
         UserPermissions userPermissions
 ) {}

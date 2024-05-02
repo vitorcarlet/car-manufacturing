@@ -1,6 +1,5 @@
 package io.carmanufacturing.persistence;
 
-import io.carmanufacturing.entities.UserCredentials;
 import io.carmanufacturing.entities.UserPermissions;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,7 +30,7 @@ public class UserEntity {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user-credentialsId_fk", nullable = false)
-    UserCredentials userCredentials;
+    UserCredentialsPersistence userCredentials;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user-permissionsId_fk", nullable = false)
