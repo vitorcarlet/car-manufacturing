@@ -6,9 +6,10 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import io.carmanufacturing.dtos.AuthDto;
 import io.carmanufacturing.dtos.TokenResponseDto;
-import io.carmanufacturing.entities.UserCredentials;
 import io.carmanufacturing.A1Infrastructure.exceptions.UnauthorizedException;
-import io.carmanufacturing.respositories.UsuarioRepository;
+import io.carmanufacturing.persistence.UserCredentialsPersistence;
+import io.carmanufacturing.respositories.UserCredentialsRepository;
+import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,36 +26,40 @@ import java.time.ZoneOffset;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Value("${auth.jwt.token.secret}")
-    private String secretKey;
-
-    @Value("${auth.jwt.token.expiration}")
-    private Integer horaExpiracaoToken;
-
-    @Value("${auth.jwt.refresh-token.expiration}")
-    private Integer horaExpiracaoRefreshToken ;
+//    @Value("${auth.jwt.token.secret}")
+//    private String secretKey;
+//
+//    @Value("${auth.jwt.token.expiration}")
+//    private Integer horaExpiracaoToken;
+//
+//    @Value("${auth.jwt.refresh-token.expiration}")
+//    private Integer horaExpiracaoRefreshToken ;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserCredentialsRepository userCredentialsRepository;
+
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return usuarioRepository.findByLogin(login);
+        return userCredentialsRepository.findByLogin(login);
     }
 
     @Override
     public TokenResponseDto obterToken(AuthDto authDto) {
-        UserCredentials userCredentials = usuarioRepository.findByLogin(authDto.login());
+        UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(authDto.login());
 
         return TokenResponseDto
                 .builder()
-                .token(geraTokenJwt(userCredentials,horaExpiracaoToken))
-                .refreshToken(geraTokenJwt(userCredentials,horaExpiracaoRefreshToken))
+                .token(geraTokenJwt(userCredentials,3600))
+                .refreshToken(geraTokenJwt(userCredentials,3600))
                 .build();
     }
 
-    public  String geraTokenJwt(UserCredentials userCredentials, Integer expiration) {
+    public  String geraTokenJwt(UserCredentialsPersistence userCredentials, Integer expiration) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+            Algorithm algorithm = Algorithm.HMAC256("asd");
             
             return JWT.create()
                     .withIssuer("auth-api")
@@ -68,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
 
     public String validaTokenJwt(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+            Algorithm algorithm = Algorithm.HMAC256("asd");
 
             return JWT.require(algorithm)
                     .withIssuer("auth-api")
@@ -85,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponseDto obterRefreshToken(String refreshToken) {
 
         String login = validaTokenJwt(refreshToken);
-        UserCredentials userCredentials = usuarioRepository.findByLogin(login);
+        UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(login);
 
         if (userCredentials == null) {
             throw new UnauthorizedException("UnauthorizedException");
@@ -97,8 +102,8 @@ public class AuthServiceImpl implements AuthService {
 
         return TokenResponseDto
                 .builder()
-                .token(geraTokenJwt(userCredentials,horaExpiracaoToken))
-                .refreshToken(geraTokenJwt(userCredentials,horaExpiracaoRefreshToken))
+                .token(geraTokenJwt(userCredentials,3600))
+                .refreshToken(geraTokenJwt(userCredentials,3600))
                 .build();
     }
 

@@ -1,8 +1,9 @@
 package io.carmanufacturing.A1Infrastructure.config;
 
-import io.carmanufacturing.entities.UserCredentials;
 import io.carmanufacturing.A1Infrastructure.exceptions.UnauthorizedException;
-import io.carmanufacturing.respositories.UsuarioRepository;
+import io.carmanufacturing.persistence.UserCredentialsPersistence;
+import io.carmanufacturing.respositories.UserCredentialsRepository;
+import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,11 +20,17 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final UserRepository userRepository;
+
+    private final UserCredentialsRepository userCredentialsRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    public SecurityFilter(AuthService authService, UserRepository userRepository, UserCredentialsRepository userCredentialsRepository) {
+        this.authService = authService;
+        this.userRepository = userRepository;
+        this.userCredentialsRepository = userCredentialsRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -33,7 +40,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (token != null) {
             String login = authService.validaTokenJwt(token);
-            UserCredentials userCredentials = usuarioRepository.findByLogin(login);
+            UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(login);
 
             if (userCredentials == null) {
                 throw  new UnauthorizedException("Unauthorizad");

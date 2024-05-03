@@ -1,5 +1,7 @@
 package io.carmanufacturing.entities;
 
+import io.carmanufacturing.persistence.UserCredentialsPersistence;
+
 import java.util.Date;
 
 public record User(Long id,
@@ -7,8 +9,8 @@ public record User(Long id,
                    String cpf,
                    Date birth,
                    String gender,
-                   boolean activeUser,
-                   UserCredentials userCredentials,
-
-                   UserPermissions userPermissions
+                   boolean activeUser
+//                   UserCredentialsPersistence userCredentials,
+//
+//                   UserPermissions userPermissions
                    ) {}
