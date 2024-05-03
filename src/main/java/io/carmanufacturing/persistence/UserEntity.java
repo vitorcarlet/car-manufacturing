@@ -28,11 +28,11 @@ public class UserEntity {
 
     boolean activeUser;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user-credentialsId_fk", nullable = false)
-    UserCredentialsPersistence userCredentials;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user-permissionsId_fk", nullable = false)
-    UserPermissions userPermissions;
+//    @OneToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "user-credentialsId_fk", nullable = false)
+//    UserCredentialsPersistence userCredentials;
+//
+//    @OneToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "user-permissionsId_fk", nullable = false)
+//    UserPermissions userPermissions;
 }

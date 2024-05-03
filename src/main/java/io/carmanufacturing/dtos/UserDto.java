@@ -10,7 +10,7 @@ public record UserDto (
         String cpf,
         Date birth,
         String gender,
-        boolean activeUser,
-        UserCredentialsPersistence userCredentials,
-        UserPermissions userPermissions
+        boolean activeUser
+//        UserCredentialsPersistence userCredentials,
+//        UserPermissions userPermissions
 ) {}

@@ -1,6 +1,6 @@
 package io.carmanufacturing.persistence;
 
-import io.carmanufacturing.entities.User;
+
 import io.carmanufacturing.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,7 +34,7 @@ public class UserCredentialsPersistence implements UserDetails {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId_fk", nullable = false)
-    private User userId;
+    private UserEntity userId;
 
     public UserCredentialsPersistence(String nome, String login, String senha, RoleEnum role) {
         this.nome = nome;

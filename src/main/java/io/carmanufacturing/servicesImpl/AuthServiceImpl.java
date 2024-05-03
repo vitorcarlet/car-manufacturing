@@ -8,6 +8,7 @@ import io.carmanufacturing.dtos.AuthDto;
 import io.carmanufacturing.dtos.TokenResponseDto;
 import io.carmanufacturing.A1Infrastructure.exceptions.UnauthorizedException;
 import io.carmanufacturing.persistence.UserCredentialsPersistence;
+import io.carmanufacturing.respositories.UserCredentialsRepository;
 import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +37,18 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserCredentialsRepository userCredentialsRepository;
+
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return userRepository.findByLogin(login);
+        return userCredentialsRepository.findByLogin(login);
     }
 
     @Override
     public TokenResponseDto obterToken(AuthDto authDto) {
-        UserCredentialsPersistence userCredentials = userRepository.findByLogin(authDto.login());
+        UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(authDto.login());
 
         return TokenResponseDto
                 .builder()
@@ -85,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponseDto obterRefreshToken(String refreshToken) {
 
         String login = validaTokenJwt(refreshToken);
-        UserCredentialsPersistence userCredentials = userRepository.findByLogin(login);
+        UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(login);
 
         if (userCredentials == null) {
             throw new UnauthorizedException("UnauthorizedException");
