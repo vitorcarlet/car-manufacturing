@@ -1,10 +1,5 @@
 
-🚀 Shared my insights in the latest video! Explored efficient implementation of authentication 
-and authorization in Spring applications using Spring Security and JWT. Learn how to enhance the
-security of your applications effortlessly, with valuable insights and hands-on demonstrations.
-This content aims to contribute to the community by providing tips, best practices, and robust strategies for secure development.
-Let's grow together! Watch the video and level up your skills.
-🤝💻 #SoftwareDevelopment #SpringSecurity #JWT #SharingKnowledge #TechCommunity #DigitalSecurity
+
 
 ## Tecnologies
 - Java 17
@@ -13,4 +8,6 @@ Let's grow together! Watch the video and level up your skills.
 - Maven
 - Lombok
 
-  Youbube video: https://www.youtube.com/watch?v=aN1R_ilr0qA
+Spring Security e JWT: Domine a Autenticação e Autorização de Forma Prática!: https://www.youtube.com/watch?v=aN1R_ilr0qA
+🚀 Desenvolvendo API com Arquitetura Limpa: Aprenda na Prática! 🛠️: https://www.youtube.com/watch?v=MsskoOicoQo
+Cafe Management System (Angular, Spring Boot - Java, MySQL Database): https://www.youtube.com/watch?v=d1MfY7MpX4c&list=PLdRq0mbeEBmwdwZF3lWwCcWmD76GfEFVT
