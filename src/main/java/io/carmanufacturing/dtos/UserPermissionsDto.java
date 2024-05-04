@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public record UserCredentialsDto(
-        String login,
-        String password
+public record UserPermissionsDto (
+        boolean isAdmin,
+        boolean isOperator,
+        boolean isAssistant
 ) {
-
 }

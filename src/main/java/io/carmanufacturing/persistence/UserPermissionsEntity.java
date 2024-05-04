@@ -13,8 +13,10 @@ import java.util.Date;
 @Data
 @Table(name = "tb_users_permissions")
 public class UserPermissionsEntity {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     boolean isAdmin;
