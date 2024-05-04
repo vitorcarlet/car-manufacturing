@@ -18,72 +18,67 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_userscredentials")
-public class UserCredentialsPersistence implements UserDetails {
+public class UserCredentialsPersistence   {
 
     @Id
     @GeneratedValue
     private Long id;
     @Column(nullable = false)
-    private String nome;
-    @Column(nullable = false)
     private String login;
     @Column(nullable = false)
     private String senha;
-    @Column(nullable = false)
-    private RoleEnum role;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId_fk", nullable = false)
     private UserEntity userId;
 
-    public UserCredentialsPersistence(String nome, String login, String senha, RoleEnum role) {
-        this.nome = nome;
+    public UserCredentialsPersistence( String login, String senha) {
         this.login = login;
         this.senha = senha;
-        this.role = role;
     }
 
     //testcommit
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == RoleEnum.ADMIN) {
+
+    public Collection<? extends GrantedAuthority> getAuthorities(UserPermissionsEntity userPermissions) {
+        if (userPermissions.isAdmin == true) {
             return List.of(
                     new SimpleGrantedAuthority("ROLE_ADMIN"),
                     new SimpleGrantedAuthority("ROLE_USER")
             );
         }
+
         return List.of(
                 new SimpleGrantedAuthority("ROLE_USER")
         );
     }
 
-    @Override
+
     public String getPassword() {
         return this.senha;
     }
 
-    @Override
+
     public String getUsername() {
         return this.login;
     }
 
-    @Override
+
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @Override
+
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    @Override
+
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    @Override
+
     public boolean isEnabled() {
         return true;
     }

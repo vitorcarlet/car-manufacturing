@@ -9,8 +9,8 @@ public record User(Long id,
                    String cpf,
                    Date birth,
                    String gender,
-                   boolean activeUser
+                   boolean activeUser,
 //                   UserCredentialsPersistence userCredentials,
 //
-//                   UserPermissions userPermissions
+                   UserPermissions userPermissions
                    ) {}

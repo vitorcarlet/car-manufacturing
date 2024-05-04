@@ -1,38 +1,32 @@
 package io.carmanufacturing.persistence;
 
-import io.carmanufacturing.entities.UserPermissions;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Data
-@Table(name = "tb_users")
-public class UserEntity {
+@Table(name = "tb_users_permissions")
+public class UserPermissionsEntity {
     @Id
     @GeneratedValue
     private Long id;
 
-    String name;
-
-    String cpf;
-
-    Date birth;
-
-    String gender;
-
-    boolean activeUser;
+    boolean isAdmin;
+    boolean isOperator;
+    boolean isAssistant;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_permission_Id_fk", nullable = false)
-    private UserPermissionsEntity userPermissionsEntity;
+    @JoinColumn(name = "userId_fk", nullable = false)
+    private UserEntity userId;
 
-//    @OneToOne(fetch = FetchType.EAGER)
+
+    //    @OneToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "user-credentialsId_fk", nullable = false)
 //    UserCredentialsPersistence userCredentials;
 //

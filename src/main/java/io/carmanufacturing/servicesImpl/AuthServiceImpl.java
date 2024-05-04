@@ -8,6 +8,8 @@ import io.carmanufacturing.dtos.AuthDto;
 import io.carmanufacturing.dtos.TokenResponseDto;
 import io.carmanufacturing.A1Infrastructure.exceptions.UnauthorizedException;
 import io.carmanufacturing.persistence.UserCredentialsPersistence;
+import io.carmanufacturing.persistence.UserEntity;
+import io.carmanufacturing.persistence.UserPermissionsEntity;
 import io.carmanufacturing.respositories.UserCredentialsRepository;
 import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
@@ -43,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return userCredentialsRepository.findByLogin(login);
+        return (UserDetails) userCredentialsRepository.findByLogin(login);
     }
 
     @Override
@@ -92,11 +94,16 @@ public class AuthServiceImpl implements AuthService {
         String login = validaTokenJwt(refreshToken);
         UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(login);
 
+        UserEntity user = userCredentials.getUserId();
+        UserPermissionsEntity userPermissions = user.getUserPermissionsEntity();
+
+
+
         if (userCredentials == null) {
             throw new UnauthorizedException("UnauthorizedException");
         }
 
-        var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities());
+        var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities(userPermissions));
 
         SecurityContextHolder.getContext().setAuthentication(autentication);
 

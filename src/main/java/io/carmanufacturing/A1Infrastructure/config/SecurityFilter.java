@@ -1,7 +1,10 @@
 package io.carmanufacturing.A1Infrastructure.config;
 
 import io.carmanufacturing.A1Infrastructure.exceptions.UnauthorizedException;
+import io.carmanufacturing.entities.UserPermissions;
 import io.carmanufacturing.persistence.UserCredentialsPersistence;
+import io.carmanufacturing.persistence.UserEntity;
+import io.carmanufacturing.persistence.UserPermissionsEntity;
 import io.carmanufacturing.respositories.UserCredentialsRepository;
 import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
@@ -41,12 +44,14 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             String login = authService.validaTokenJwt(token);
             UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(login);
+            UserEntity userEntity = userCredentials.getUserId();
+            UserPermissionsEntity userPermissions = userEntity.getUserPermissionsEntity();
 
             if (userCredentials == null) {
                 throw  new UnauthorizedException("Unauthorizad");
             }
 
-            var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities());
+            var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities(userPermissions));
 
             SecurityContextHolder.getContext().setAuthentication(autentication);
         }
