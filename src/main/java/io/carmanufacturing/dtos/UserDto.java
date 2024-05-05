@@ -1,7 +1,6 @@
 package io.carmanufacturing.dtos;
 
 import io.carmanufacturing.entities.UserPermissions;
-import io.carmanufacturing.persistence.UserCredentialsPersistence;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +16,6 @@ public record UserDto (
         boolean activeUser,
 
         UserPermissions userPermissions
-//        UserCredentialsPersistence userCredentials,
+//        UserCredentialsEntity userCredentials,
 //        UserPermissions userPermissions
 ) {}

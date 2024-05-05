@@ -7,14 +7,13 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import io.carmanufacturing.dtos.AuthDto;
 import io.carmanufacturing.dtos.TokenResponseDto;
 import io.carmanufacturing.A1Infrastructure.exceptions.UnauthorizedException;
-import io.carmanufacturing.persistence.UserCredentialsPersistence;
+import io.carmanufacturing.persistence.UserCredentialsEntity;
 import io.carmanufacturing.persistence.UserEntity;
 import io.carmanufacturing.persistence.UserPermissionsEntity;
 import io.carmanufacturing.respositories.UserCredentialsRepository;
 import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponseDto obterToken(AuthDto authDto) {
-        UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(authDto.login());
+        UserCredentialsEntity userCredentials = userCredentialsRepository.findByLogin(authDto.login());
 
         return TokenResponseDto
                 .builder()
@@ -59,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    public  String geraTokenJwt(UserCredentialsPersistence userCredentials, Integer expiration) {
+    public  String geraTokenJwt(UserCredentialsEntity userCredentials, Integer expiration) {
         try {
             Algorithm algorithm = Algorithm.HMAC256("asd");
             
@@ -92,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponseDto obterRefreshToken(String refreshToken) {
 
         String login = validaTokenJwt(refreshToken);
-        UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(login);
+        UserCredentialsEntity userCredentials = userCredentialsRepository.findByLogin(login);
 
         UserEntity user = userCredentials.getUserId();
         UserPermissionsEntity userPermissions = user.getUserPermissionsEntity();

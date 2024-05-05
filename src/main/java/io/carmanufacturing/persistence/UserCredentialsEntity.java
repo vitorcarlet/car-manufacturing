@@ -1,14 +1,12 @@
 package io.carmanufacturing.persistence;
 
 
-import io.carmanufacturing.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_userscredentials")
-public class UserCredentialsPersistence   {
+public class UserCredentialsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +31,10 @@ public class UserCredentialsPersistence   {
     @JoinColumn(name = "userId_fk", nullable = false)
     private UserEntity userId;
 
-    public UserCredentialsPersistence( String login, String senha) {
+    public UserCredentialsEntity(String login, String senha, UserEntity user) {
         this.login = login;
         this.senha = senha;
+        this.userId = user;
     }
 
     //testcommit

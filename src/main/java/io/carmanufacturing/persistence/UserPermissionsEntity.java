@@ -19,20 +19,22 @@ public class UserPermissionsEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(name="isAdmin",nullable = false)
     boolean isAdmin;
+
+    @Column(name="isOperator",nullable = false)
     boolean isOperator;
+
+    @Column(name="isAssisant",nullable = false)
     boolean isAssistant;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId_fk", nullable = false)
     private UserEntity userId;
 
-
-    //    @OneToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "user-credentialsId_fk", nullable = false)
-//    UserCredentialsPersistence userCredentials;
-//
-//    @OneToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "user-permissionsId_fk", nullable = false)
-//    UserPermissions userPermissions;
+    public UserPermissionsEntity(boolean admin, boolean operator, boolean assistant) {
+        this.isAdmin = admin;
+        this.isOperator = operator;
+        this.isAssistant = assistant;
+    }
 }
