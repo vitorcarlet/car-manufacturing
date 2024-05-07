@@ -13,7 +13,7 @@ public class UsernameLenghtValidation implements NewAccountValidationStrategy {
     @SneakyThrows
     @Override
     public void execute(UserDto userDto, UserCredentialsDto userCredentialsDto, UserPermissionsDto userPermissionsDto) {
-        if(!userDto.getName().matches("^[a-zA-Z]+$")){
+        if(!userDto.name().matches("^[a-zA-Z]+$")){
             throw new Exception("O nome deve conter apenas letras.");
         }
     }

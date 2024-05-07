@@ -6,16 +6,39 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Data
-@NoArgsConstructor
+
+
 public record UserDto (
         String name,
         String cpf,
         Date birth,
         String gender,
-        boolean activeUser,
+        boolean activeUser
 
-        UserPermissions userPermissions
-//        UserCredentialsEntity userCredentials,
-//        UserPermissions userPermissions
-) {}
+
+) {
+    @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String cpf() {
+        return cpf;
+    }
+
+    @Override
+    public Date birth() {
+        return birth;
+    }
+
+    @Override
+    public String gender() {
+        return gender;
+    }
+
+    @Override
+    public boolean activeUser() {
+        return activeUser;
+    }
+}

@@ -21,7 +21,7 @@ public class ExistingCPFValidation  implements NewAccountValidationStrategy {
     @SneakyThrows
     @Override
     public void execute(UserDto userDto, UserCredentialsDto userCredentialsDto, UserPermissionsDto userPermissionsDto) {
-        UserEntity user = userRepository.findByCpf(userDto.getCpf());
+        UserEntity user = userRepository.findByCpf(userDto.cpf());
         if(Objects.isNull(user)){
             throw new Exception("Ja existe um usuario registrado com esse CPF");
         }

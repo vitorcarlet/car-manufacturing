@@ -13,7 +13,7 @@ public class PasswordLenghtValidation implements NewAccountValidationStrategy {
     @SneakyThrows
     @Override
     public void execute(UserDto userDto, UserCredentialsDto userCredentialsDto, UserPermissionsDto userPermissionsDto) {
-        if(userCredentialsDto.getPassword().length() < 8 || userCredentialsDto.getPassword().length() > 12) {
+        if(userCredentialsDto.password().length() < 8 || userCredentialsDto.password().length() > 12) {
             throw new Exception("A senha deve ter no mínimo 8 caracteres e no máximo 12 caracteres.");
         }
     }

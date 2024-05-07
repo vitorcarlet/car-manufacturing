@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserPermissionsRepository  extends JpaRepository<UserPermissionsEntity, Long> {
 
-    UserPermissionsEntity findByLogin(String login);
+    //UserPermissionsEntity findByLogin(String login);
 
-    UserEntity findByUserID(Long id);
+    UserEntity findByUserId(Long id);
 }

@@ -2,15 +2,18 @@ package io.carmanufacturing.persistence;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Date;
 
+@NamedQuery(name = "UserPermissionsEntity.findByUserId", query = "select new UserEntity(u.id,u.activeUser,u.birth,u.cpf,u.gender,u.name) from UserEntity u where u.id=:id")
+
+
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "tb_users_permissions")
 public class UserPermissionsEntity {
 
@@ -25,7 +28,7 @@ public class UserPermissionsEntity {
     @Column(name="isOperator",nullable = false)
     boolean isOperator;
 
-    @Column(name="isAssisant",nullable = false)
+    @Column(name="isAssistant",nullable = false)
     boolean isAssistant;
 
     @OneToOne(fetch = FetchType.EAGER)

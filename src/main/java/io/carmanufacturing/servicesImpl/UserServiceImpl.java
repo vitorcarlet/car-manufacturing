@@ -51,11 +51,11 @@ public class UserServiceImpl implements UserService {
 
         try{
 
-            var passwordHash = passwordEncoder.encode(userCredentialsDto.getPassword());
+            var passwordHash = passwordEncoder.encode(userCredentialsDto.password());
 
             UserPermissionsEntity userPermissions = new UserPermissionsEntity(userPermissionsDto.isAdmin(), userPermissionsDto.isOperator(), userPermissionsDto.isAssistant());
-            UserEntity user = new UserEntity(userDto.getName(),userDto.getCpf(), userDto.getBirth() ,userDto.getGender(),true,userPermissions);
-            UserCredentialsEntity userCredentials = new UserCredentialsEntity(userCredentialsDto.getLogin(),userCredentialsDto.getPassword(),user);
+            UserEntity user = new UserEntity(userDto.name(),userDto.cpf(), userDto.birth() ,userDto.gender(),true);
+            UserCredentialsEntity userCredentials = new UserCredentialsEntity(userCredentialsDto.login(),userCredentialsDto.password(),user);
             userPermissionsRepository.save(userPermissions);
             userRepository.save(user);
             userCredentialsRepository.save(userCredentials);

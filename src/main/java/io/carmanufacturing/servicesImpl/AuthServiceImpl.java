@@ -11,6 +11,7 @@ import io.carmanufacturing.persistence.UserCredentialsEntity;
 import io.carmanufacturing.persistence.UserEntity;
 import io.carmanufacturing.persistence.UserPermissionsEntity;
 import io.carmanufacturing.respositories.UserCredentialsRepository;
+import io.carmanufacturing.respositories.UserPermissionsRepository;
 import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserCredentialsRepository userCredentialsRepository;
+
+    @Autowired
+    private UserPermissionsRepository userPermissionsRepository;
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
@@ -91,10 +95,10 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponseDto obterRefreshToken(String refreshToken) {
 
         String login = validaTokenJwt(refreshToken);
-        UserCredentialsEntity userCredentials = userCredentialsRepository.findByLogin(login);
 
-        UserEntity user = userCredentials.getUserId();
-        UserPermissionsEntity userPermissions = user.getUserPermissionsEntity();
+        UserCredentialsEntity userCredentials = userCredentialsRepository.findByLogin(login);
+        UserEntity user = userRepository.getReferenceById(userCredentials.getUserId().getId());
+        UserPermissionsEntity userPermissions = userPermissionsRepository.getReferenceById(user.getId());
 
 
 

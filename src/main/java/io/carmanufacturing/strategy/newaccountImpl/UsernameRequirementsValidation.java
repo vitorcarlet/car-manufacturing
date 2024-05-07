@@ -14,7 +14,7 @@ public class UsernameRequirementsValidation implements NewAccountValidationStrat
     @Override
     public void execute(UserDto userDto, UserCredentialsDto userCredentialsDto, UserPermissionsDto userPermissionsDto) {
         System.out.println("Validando requerimentos do username");
-        if(!userDto.getName().matches("^[a-zA-Z]+$")){
+        if(!userDto.name().matches("^[a-zA-Z]+$")){
             throw new Exception("O nome deve conter apenas letras.");
         }
     }

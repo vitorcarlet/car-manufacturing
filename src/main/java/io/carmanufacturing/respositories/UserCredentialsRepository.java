@@ -10,5 +10,5 @@ public interface UserCredentialsRepository extends JpaRepository<UserCredentials
 
     UserCredentialsEntity findByLogin(String login);
 
-    UserEntity findByUserID(Long id);
+    UserEntity findByUserId(Long id);
 }
