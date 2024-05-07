@@ -1,8 +1,11 @@
 package io.carmanufacturing.A1Infrastructure.config;
 
 import io.carmanufacturing.A1Infrastructure.exceptions.UnauthorizedException;
-import io.carmanufacturing.persistence.UserCredentialsPersistence;
+import io.carmanufacturing.persistence.UserCredentialsEntity;
+import io.carmanufacturing.persistence.UserEntity;
+import io.carmanufacturing.persistence.UserPermissionsEntity;
 import io.carmanufacturing.respositories.UserCredentialsRepository;
+import io.carmanufacturing.respositories.UserPermissionsRepository;
 import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
 import jakarta.servlet.FilterChain;
@@ -23,12 +26,14 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final AuthService authService;
     private final UserRepository userRepository;
 
+    private final UserPermissionsRepository userPermissionsRepository;
     private final UserCredentialsRepository userCredentialsRepository;
 
     @Autowired
-    public SecurityFilter(AuthService authService, UserRepository userRepository, UserCredentialsRepository userCredentialsRepository) {
+    public SecurityFilter(AuthService authService, UserRepository userRepository, UserPermissionsRepository userPermissionsRepository, UserCredentialsRepository userCredentialsRepository) {
         this.authService = authService;
         this.userRepository = userRepository;
+        this.userPermissionsRepository = userPermissionsRepository;
         this.userCredentialsRepository = userCredentialsRepository;
     }
 
@@ -40,13 +45,15 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (token != null) {
             String login = authService.validaTokenJwt(token);
-            UserCredentialsPersistence userCredentials = userCredentialsRepository.findByLogin(login);
+            UserCredentialsEntity userCredentials = userCredentialsRepository.findByLogin(login);
+            UserEntity userEntity = userCredentials.getUserId();
+            UserPermissionsEntity userPermissions = userPermissionsRepository.getReferenceById(userEntity.getId());
 
             if (userCredentials == null) {
-                throw  new UnauthorizedException("Unauthorizad");
+                throw  new UnauthorizedException("Unauthorized");
             }
 
-            var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities());
+            var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities(userPermissions));
 
             SecurityContextHolder.getContext().setAuthentication(autentication);
         }

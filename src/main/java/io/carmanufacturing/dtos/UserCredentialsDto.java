@@ -1,11 +1,21 @@
 package io.carmanufacturing.dtos;
 
-import io.carmanufacturing.enums.RoleEnum;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
 
 public record UserCredentialsDto(
-        String nome,
         String login,
-        String senha,
-        RoleEnum role
+        String password
 ) {
+    @Override
+    public String login() {
+        return login;
+    }
+
+    @Override
+    public String password() {
+        return password;
+    }
 }

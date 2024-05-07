@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class UserEntityMapper {
 
     public UserEntity toEntity(User user) {
-        return new UserEntity(user.id(),user.name(), user.cpf(), user.birth(),user.gender(),user.activeUser());
+        return new UserEntity(user.name(), user.cpf(), user.birth(),user.gender(),user.activeUser());
     }
 
     public User toUser(UserEntity entity) {

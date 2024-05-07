@@ -1,89 +1,89 @@
 package io.carmanufacturing.persistence;
 
 
-import io.carmanufacturing.enums.RoleEnum;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@NamedQuery(name = "UserCredentialsEntity.findByUserId", query = "select new UserEntity(u.id,u.activeUser,u.birth,u.cpf,u.gender,u.name) from UserEntity u where u.id=:id")
+
+@Data
+@DynamicInsert
+@DynamicUpdate
 @Entity
 @Table(name = "tb_userscredentials")
-public class UserCredentialsPersistence implements UserDetails {
+public class UserCredentialsEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    @Column(nullable = false)
-    private String nome;
     @Column(nullable = false)
     private String login;
     @Column(nullable = false)
     private String senha;
-    @Column(nullable = false)
-    private RoleEnum role;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId_fk", nullable = false)
     private UserEntity userId;
 
-    public UserCredentialsPersistence(String nome, String login, String senha, RoleEnum role) {
-        this.nome = nome;
+    public UserCredentialsEntity(String login, String senha, UserEntity user) {
         this.login = login;
         this.senha = senha;
-        this.role = role;
+        this.userId = user;
     }
 
     //testcommit
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == RoleEnum.ADMIN) {
+
+    public Collection<? extends GrantedAuthority> getAuthorities(UserPermissionsEntity userPermissions) {
+        if (userPermissions.isAdmin == true) {
             return List.of(
                     new SimpleGrantedAuthority("ROLE_ADMIN"),
                     new SimpleGrantedAuthority("ROLE_USER")
             );
         }
+
         return List.of(
                 new SimpleGrantedAuthority("ROLE_USER")
         );
     }
 
-    @Override
+
     public String getPassword() {
         return this.senha;
     }
 
-    @Override
+
     public String getUsername() {
         return this.login;
     }
 
-    @Override
+
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @Override
+
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    @Override
+
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    @Override
+
     public boolean isEnabled() {
         return true;
     }

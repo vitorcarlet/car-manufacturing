@@ -1,9 +1,12 @@
 package io.carmanufacturing.dtos;
 
 import io.carmanufacturing.entities.UserPermissions;
-import io.carmanufacturing.persistence.UserCredentialsPersistence;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+
+
 
 public record UserDto (
         String name,
@@ -11,6 +14,31 @@ public record UserDto (
         Date birth,
         String gender,
         boolean activeUser
-//        UserCredentialsPersistence userCredentials,
-//        UserPermissions userPermissions
-) {}
+
+
+) {
+    @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String cpf() {
+        return cpf;
+    }
+
+    @Override
+    public Date birth() {
+        return birth;
+    }
+
+    @Override
+    public String gender() {
+        return gender;
+    }
+
+    @Override
+    public boolean activeUser() {
+        return activeUser;
+    }
+}
