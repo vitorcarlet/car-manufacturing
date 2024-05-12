@@ -36,6 +36,9 @@ public class UserCredentialsEntity {
     @JoinColumn(name = "userId_fk", nullable = false)
     private UserEntity userId;
 
+    public UserCredentialsEntity() {
+    }
+
     public UserCredentialsEntity(String login, String senha, UserEntity user) {
         this.login = login;
         this.senha = senha;
@@ -43,6 +46,7 @@ public class UserCredentialsEntity {
     }
 
     //testcommit
+
 
 
     public Collection<? extends GrantedAuthority> getAuthorities(UserPermissionsEntity userPermissions) {

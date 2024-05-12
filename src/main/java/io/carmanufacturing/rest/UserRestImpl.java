@@ -1,27 +1,26 @@
-package io.carmanufacturing.restImpl;
+package io.carmanufacturing.rest;
 
 import io.carmanufacturing.constants.CarManufacturingConstants;
 import io.carmanufacturing.dtos.UserCredentialsDto;
 import io.carmanufacturing.dtos.UserDto;
 import io.carmanufacturing.dtos.UserPermissionsDto;
-import io.carmanufacturing.rest.UserRest;
 import io.carmanufacturing.services.UserService;
 import io.carmanufacturing.utils.CarManufacturingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
-public class UserRestImpl implements UserRest {
+@RequestMapping("/usuarios")
+public class UserRestImpl {
 
     @Autowired
     UserService userService;
 
-    @Override
-    public ResponseEntity<String> registrar(UserDto userDto, UserCredentialsDto userCredentialsDto, UserPermissionsDto userPermissionsDto) {
+    @PostMapping
+    ResponseEntity<String> signUp(@RequestBody UserDto userDto, UserCredentialsDto userCredentialsDto, UserPermissionsDto userPermissionsDto){
         try{
             return userService.signUp(userDto,userCredentialsDto,userPermissionsDto);
         }catch (Exception ex){
@@ -31,13 +30,14 @@ public class UserRestImpl implements UserRest {
 
     }
 
-    @Override
+    @GetMapping("/admin")
     public String getAdmin() {
         return "yes";
     }
 
-    @Override
+    @GetMapping("/user")
     public String getUser() {
         return "yes";
     }
+
 }

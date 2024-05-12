@@ -1,5 +1,6 @@
 package io.carmanufacturing.persistence;
 
+import io.carmanufacturing.dtos.UserPermissionsDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -22,22 +23,26 @@ public class UserPermissionsEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name="isAdmin",nullable = false)
+    @Column(name="isAdmin")
     boolean isAdmin;
 
-    @Column(name="isOperator",nullable = false)
+    @Column(name="isOperator")
     boolean isOperator;
 
-    @Column(name="isAssistant",nullable = false)
+    @Column(name="isAssistant")
     boolean isAssistant;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userId_fk", nullable = false)
+    @JoinColumn(name = "userId_fk")
     private UserEntity userId;
 
-    public UserPermissionsEntity(boolean admin, boolean operator, boolean assistant) {
+    public UserPermissionsEntity() {
+    }
+
+    public UserPermissionsEntity(boolean admin, boolean operator, boolean assistant, UserEntity user) {
         this.isAdmin = admin;
         this.isOperator = operator;
         this.isAssistant = assistant;
+        this.userId = user;
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -47,15 +48,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<String> signUp(UserDto userDto, UserCredentialsDto userCredentialsDto, UserPermissionsDto userPermissionsDto) {
-        newAccountValidationStrategy.forEach(validation -> validation.execute(userDto,userCredentialsDto,userPermissionsDto));
+        //newAccountValidationStrategy.forEach(validation -> validation.execute(userDto,userCredentialsDto,userPermissionsDto));
 
         try{
 
             var passwordHash = passwordEncoder.encode(userCredentialsDto.password());
 
-            UserPermissionsEntity userPermissions = new UserPermissionsEntity(userPermissionsDto.isAdmin(), userPermissionsDto.isOperator(), userPermissionsDto.isAssistant());
             UserEntity user = new UserEntity(userDto.name(),userDto.cpf(), userDto.birth() ,userDto.gender(),true);
-            UserCredentialsEntity userCredentials = new UserCredentialsEntity(userCredentialsDto.login(),userCredentialsDto.password(),user);
+            UserPermissionsEntity userPermissions = new UserPermissionsEntity(userPermissionsDto.isAdmin(), userPermissionsDto.isOperator(),userPermissionsDto.isAssistant(), user);
+            UserCredentialsEntity userCredentials = new UserCredentialsEntity(userCredentialsDto.login(),passwordHash,user);
             userPermissionsRepository.save(userPermissions);
             userRepository.save(user);
             userCredentialsRepository.save(userCredentials);
