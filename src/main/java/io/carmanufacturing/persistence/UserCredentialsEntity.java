@@ -8,35 +8,49 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
 @NamedQuery(name = "UserCredentialsEntity.findByUserId", query = "select new UserEntity(u.id,u.activeUser,u.birth,u.cpf,u.gender,u.name) from UserEntity u where u.id=:id")
+@NamedQuery(name = "UserCredentialsEntity.findByLogin", query = "select new UserCredentialsEntity(u.id,u.login,u.senha,u.userId) from UserCredentialsEntity u where u.login=:login")
 
 @Data
 @DynamicInsert
 @DynamicUpdate
 @Entity
 @Table(name = "tb_userscredentials")
-public class UserCredentialsEntity {
+public class UserCredentialsEntity implements UserDetails  {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    protected Long id;
     @Column(nullable = false)
-    private String login;
+    protected String login;
     @Column(nullable = false)
-    private String senha;
+    protected String senha;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId_fk", nullable = false)
-    private UserEntity userId;
+    protected UserEntity userId;
 
-    public UserCredentialsEntity(String login, String senha, UserEntity user) {
+    public UserCredentialsEntity() {
+    }
+
+    public UserCredentialsEntity(Long id, String login, String senha, UserEntity user) {
+        this.id = id;
+        this.login = login;
+        this.senha = senha;
+        this.userId = user;
+    }
+
+    public UserCredentialsEntity( String login, String senha, UserEntity user) {
         this.login = login;
         this.senha = senha;
         this.userId = user;
@@ -45,19 +59,10 @@ public class UserCredentialsEntity {
     //testcommit
 
 
-    public Collection<? extends GrantedAuthority> getAuthorities(UserPermissionsEntity userPermissions) {
-        if (userPermissions.isAdmin == true) {
-            return List.of(
-                    new SimpleGrantedAuthority("ROLE_ADMIN"),
-                    new SimpleGrantedAuthority("ROLE_USER")
-            );
-        }
-
-        return List.of(
-                new SimpleGrantedAuthority("ROLE_USER")
-        );
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
-
 
     public String getPassword() {
         return this.senha;

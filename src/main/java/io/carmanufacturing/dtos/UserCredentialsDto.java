@@ -11,7 +11,7 @@ public record UserCredentialsDto(
 ) {
     @Override
     public String login() {
-        return login;
+        return password;
     }
 
     @Override

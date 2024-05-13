@@ -12,6 +12,6 @@ import java.util.Map;
 
 public interface UserService {
 
-    @PostMapping(path = "/signup")
+
     public ResponseEntity<String> signUp(@RequestBody(required = true) UserDto userDto, UserCredentialsDto userCredentialsDto, UserPermissionsDto userPermissionsDto);
 }

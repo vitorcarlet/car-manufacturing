@@ -35,6 +35,9 @@ public class UserEntity {
     @Column(name="activeUser",nullable = false)
     boolean activeUser;
 
+    public UserEntity() {
+
+    }
 
     public UserEntity(String name, String cpf, Date birth, String gender, boolean activeUser) {
         this.name = name;
