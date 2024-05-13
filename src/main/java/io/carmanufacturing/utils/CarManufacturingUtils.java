@@ -26,11 +26,6 @@ public class CarManufacturingUtils {
     }
 
 
-    public static String getUUID(){
-        Date date = new Date();
-        long time = date.getTime();
-        return "BILL-"+time;
-    }
 
     public static JSONArray getJsonArrayFromString(String data) throws JSONException {
         JSONArray jsonArray = new JSONArray(data);

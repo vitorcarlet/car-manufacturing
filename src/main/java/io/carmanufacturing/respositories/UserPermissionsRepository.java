@@ -1,5 +1,6 @@
 package io.carmanufacturing.respositories;
 
+import io.carmanufacturing.persistence.UserCredentialsEntity;
 import io.carmanufacturing.persistence.UserEntity;
 import io.carmanufacturing.persistence.UserPermissionsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +11,7 @@ public interface UserPermissionsRepository  extends JpaRepository<UserPermission
 
     //UserPermissionsEntity findByLogin(String login);
 
-    UserEntity findByUserId(Long id);
+
+    UserCredentialsEntity findByLogin(String login);
+    UserPermissionsEntity findByUserCredentialsId(Long id);
 }

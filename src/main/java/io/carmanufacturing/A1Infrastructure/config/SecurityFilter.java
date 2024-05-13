@@ -12,6 +12,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
@@ -44,16 +46,25 @@ public class SecurityFilter extends OncePerRequestFilter {
         String token = extraiTokeHeader(request);
 
         if (token != null) {
+            log.info(token);
             String login = authService.validaTokenJwt(token);
             UserCredentialsEntity userCredentials = userCredentialsRepository.findByLogin(login);
-            UserEntity userEntity = userCredentials.getUserId();
-            UserPermissionsEntity userPermissions = userPermissionsRepository.getReferenceById(userEntity.getId());
-
             if (userCredentials == null) {
                 throw  new UnauthorizedException("Unauthorized");
             }
+//            UserEntity userEntity = userCredentials.getUserId();
+//            if (userCredentials == null) {
+//                throw  new UnauthorizedException("Unauthorized");
+//            }
+            log.info(String.valueOf(userCredentials.getId()));
+            UserPermissionsEntity userPermissions = userPermissionsRepository.findByUserCredentialsId(userCredentials.getId());
+            if (userPermissions == null) {
+                throw  new UnauthorizedException("Unauthorized");
+            }
 
-            var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities(userPermissions));
+
+            var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userPermissions.getAuthorities());
+            log.info(String.valueOf(autentication));
 
             SecurityContextHolder.getContext().setAuthentication(autentication);
         }

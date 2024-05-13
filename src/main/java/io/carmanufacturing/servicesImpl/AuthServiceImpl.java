@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return (UserDetails) userCredentialsRepository.findByLogin(login);
+        return  userPermissionsRepository.findByLogin(login);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
             throw new UnauthorizedException("UnauthorizedException");
         }
 
-        var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities(userPermissions));
+        var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userPermissions.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(autentication);
 
