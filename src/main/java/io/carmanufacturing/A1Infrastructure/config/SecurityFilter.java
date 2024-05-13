@@ -1,13 +1,18 @@
 package io.carmanufacturing.A1Infrastructure.config;
 
-import io.carmanufacturing.entities.UserCredentials;
 import io.carmanufacturing.A1Infrastructure.exceptions.UnauthorizedException;
-import io.carmanufacturing.respositories.UsuarioRepository;
+import io.carmanufacturing.persistence.UserCredentialsEntity;
+import io.carmanufacturing.persistence.UserEntity;
+import io.carmanufacturing.persistence.UserPermissionsEntity;
+import io.carmanufacturing.respositories.UserCredentialsRepository;
+import io.carmanufacturing.respositories.UserPermissionsRepository;
+import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,14 +21,23 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final UserRepository userRepository;
+
+    private final UserPermissionsRepository userPermissionsRepository;
+    private final UserCredentialsRepository userCredentialsRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    public SecurityFilter(AuthService authService, UserRepository userRepository, UserPermissionsRepository userPermissionsRepository, UserCredentialsRepository userCredentialsRepository) {
+        this.authService = authService;
+        this.userRepository = userRepository;
+        this.userPermissionsRepository = userPermissionsRepository;
+        this.userCredentialsRepository = userCredentialsRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -32,14 +46,25 @@ public class SecurityFilter extends OncePerRequestFilter {
         String token = extraiTokeHeader(request);
 
         if (token != null) {
+            log.info(token);
             String login = authService.validaTokenJwt(token);
-            UserCredentials userCredentials = usuarioRepository.findByLogin(login);
-
+            UserCredentialsEntity userCredentials = userCredentialsRepository.findByLogin(login);
             if (userCredentials == null) {
-                throw  new UnauthorizedException("Unauthorizad");
+                throw  new UnauthorizedException("Unauthorized");
+            }
+//            UserEntity userEntity = userCredentials.getUserId();
+//            if (userCredentials == null) {
+//                throw  new UnauthorizedException("Unauthorized");
+//            }
+            log.info(String.valueOf(userCredentials.getId()));
+            UserPermissionsEntity userPermissions = userPermissionsRepository.findByUserCredentialsId(userCredentials.getId());
+            if (userPermissions == null) {
+                throw  new UnauthorizedException("Unauthorized");
             }
 
-            var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities());
+
+            var autentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userPermissions.getAuthorities());
+            log.info(String.valueOf(autentication));
 
             SecurityContextHolder.getContext().setAuthentication(autentication);
         }

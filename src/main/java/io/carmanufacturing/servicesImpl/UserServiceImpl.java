@@ -1,18 +1,31 @@
 package io.carmanufacturing.servicesImpl;
 
+import io.carmanufacturing.constants.CarManufacturingConstants;
 import io.carmanufacturing.dtos.UserCredentialsDto;
 import io.carmanufacturing.dtos.UserDto;
-import io.carmanufacturing.entities.UserCredentials;
-import io.carmanufacturing.A1Infrastructure.exceptions.BusinessException;
+import io.carmanufacturing.dtos.UserPermissionsDto;
+import io.carmanufacturing.persistence.UserCredentialsEntity;
 import io.carmanufacturing.persistence.UserEntity;
+import io.carmanufacturing.persistence.UserPermissionsEntity;
 import io.carmanufacturing.respositories.UserCredentialsRepository;
+import io.carmanufacturing.respositories.UserPermissionsRepository;
 import io.carmanufacturing.respositories.UserRepository;
 import io.carmanufacturing.services.UserService;
+import io.carmanufacturing.strategy.NewAccountValidationStrategy;
+import io.carmanufacturing.utils.CarManufacturingUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
+
+@Slf4j
 @Service
+
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -22,23 +35,55 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserPermissionsRepository userPermissionsRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Override
-    public UserCredentialsDto salvar(UserCredentialsDto userCredentialsDto, UserDto userDto) {
-        UserCredentials userCredentialsJaExiste = userCredentialsRepository.findByLogin(userCredentialsDto.login());
-        UserEntity userCpfAlreadyExists = userRepository.findByCpf(userDto.cpf());
+    private final List<NewAccountValidationStrategy> newAccountValidationStrategy;
 
-        if (userCredentialsJaExiste != null || userCpfAlreadyExists != null) {
-            throw new BusinessException("Usuário já existe!");
+    public UserServiceImpl(List<NewAccountValidationStrategy> newAccountValidationStrategy) {
+        this.newAccountValidationStrategy = newAccountValidationStrategy;
+    }
+
+
+
+
+    @Override
+    public ResponseEntity<String> signUp(UserDto userDto, UserCredentialsDto userCredentialsDto, UserPermissionsDto userPermissionsDto) {
+        //newAccountValidationStrategy.forEach(validation -> validation.execute(userDto,userCredentialsDto,userPermissionsDto));
+
+        if (Objects.isNull(userPermissionsDto)) {
+            // Handle null values appropriately, e.g., set defaults or reject the request
+            return ResponseEntity.badRequest().body("UserPermissionsDto must not contain null values");
         }
 
-        var passwordHash = passwordEncoder.encode(userCredentialsDto.senha());
 
-        UserCredentials entity = new UserCredentials(userCredentialsDto.nome(), userCredentialsDto.login(), passwordHash, userCredentialsDto.role());
+        log.info("chegou no signup");
+        log.info(userPermissionsDto.toString());
+        log.info(userCredentialsDto.toString());
+        log.info(userDto.toString());
+        try{
 
-        UserCredentials novoUserCredentials = userCredentialsRepository.save(entity);
+            var passwordHash = passwordEncoder.encode(userCredentialsDto.password());
 
-        return new UserCredentialsDto(novoUserCredentials.getNome(), novoUserCredentials.getLogin(), novoUserCredentials.getSenha(), novoUserCredentials.getRole());
+            UserEntity user = new UserEntity(userDto.name(),userDto.cpf(), userDto.birth() ,userDto.gender(),true);
+             UserCredentialsEntity userCredentials = new UserCredentialsEntity(userCredentialsDto.login(),passwordHash,user);
+            UserPermissionsEntity userPermissions = new UserPermissionsEntity(userPermissionsDto.isAdmin(), userPermissionsDto.isOperator(),userPermissionsDto.isAssistant(), userCredentials);
+            userRepository.save(user);
+            userCredentialsRepository.save(userCredentials);
+            userPermissionsRepository.save(userPermissions);
+
+            return CarManufacturingUtils.getResponseEntity("Succesfully Registered",HttpStatus.OK);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CarManufacturingUtils.getResponseEntity(CarManufacturingConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
+
+
+
+
 }

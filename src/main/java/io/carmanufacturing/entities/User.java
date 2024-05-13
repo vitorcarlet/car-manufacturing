@@ -7,8 +7,6 @@ public record User(Long id,
                    String cpf,
                    Date birth,
                    String gender,
-                   boolean activeUser,
-                   UserCredentials userCredentials,
+                   boolean activeUser
 
-                   UserPermissions userPermissions
                    ) {}
