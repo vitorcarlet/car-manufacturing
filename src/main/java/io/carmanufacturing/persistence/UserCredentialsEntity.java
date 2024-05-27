@@ -16,8 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@NamedQuery(name = "UserCredentialsEntity.findByUserId", query = "select new UserEntity(u.id,u.activeUser,u.birth,u.cpf,u.gender,u.name) from UserEntity u where u.id=:id")
-@NamedQuery(name = "UserCredentialsEntity.findByLogin", query = "select new UserCredentialsEntity(u.id,u.login,u.senha,u.userId) from UserCredentialsEntity u where u.login=:login")
+//@NamedQuery(name = "UserCredentialsEntity.findByUserId", query = "select new UserEntity(u.id,u.activeUser,u.birth,u.cpf,u.gender,u.name) from UserEntity u where u.id=:id")
+//@NamedQuery(name = "UserCredentialsEntity.findByLogin", query = "select new UserCredentialsEntity(u.id,u.login,u.senha,u.userId) from UserCredentialsEntity u where u.login=:login")
 
 @Data
 @DynamicInsert

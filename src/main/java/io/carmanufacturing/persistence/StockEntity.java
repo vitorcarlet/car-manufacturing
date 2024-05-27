@@ -2,10 +2,7 @@ package io.carmanufacturing.persistence;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +21,8 @@ import java.util.List;
 @DynamicUpdate
 @Entity
 @Table(name = "tb_stock")
+@NoArgsConstructor
+@AllArgsConstructor
 public class StockEntity   {
 
 
@@ -36,44 +35,23 @@ public class StockEntity   {
     protected String name;
 
     @Column(nullable = false)
-    protected String cateogyr;
+    protected String category;
 
     @Column(nullable = false)
-    protected float custoMedio;
+    protected float averageCost;
 
     @Column(nullable = false)
-    protected float valorNoEstoque;
+    protected float stockValue;
 
     @Column(nullable = false)
-    protected float QuantidadeNoEstoque;
+    protected float stockQuantity;
 
     @Column(nullable = false)
-    protected float EsperadoChegarNoEstoque;
+    protected float expectedStock;
 
     @Column(nullable = false)
-    protected float ComprometidoAChegarNoEstoque;
-
-    //@Column(nullable = false)
-    //PontoDeRecompra float pontoDeRecompra;
-
-    @Column(nullable = false)
-    protected float faltandoOrExcesso;
+    protected float commitedStock;
 
 
 
-    public StockEntity() {
-    }
-
-    public StockEntity(Long id, String name, String cateogyr, float custoMedio, float valorNoEstoque, float quantidadeNoEstoque, float esperadoChegarNoEstoque, float comprometidoAChegarNoEstoque, float pontoDeRecompra, float faltandoOrExcesso) {
-        this.id = id;
-        this.name = name;
-        this.cateogyr = cateogyr;
-        this.custoMedio = custoMedio;
-        this.valorNoEstoque = valorNoEstoque;
-        QuantidadeNoEstoque = quantidadeNoEstoque;
-        EsperadoChegarNoEstoque = esperadoChegarNoEstoque;
-        ComprometidoAChegarNoEstoque = comprometidoAChegarNoEstoque;
-        //this.pontoDeRecompra = pontoDeRecompra;
-        this.faltandoOrExcesso = faltandoOrExcesso;
-    }
 }

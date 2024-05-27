@@ -1,4 +1,4 @@
-package io.carmanufacturing.controllers;
+package io.carmanufacturing.usecases.controllers;
 
 import io.carmanufacturing.dtos.UserDto;
 import io.carmanufacturing.entities.User;
